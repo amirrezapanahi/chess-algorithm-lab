@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Chess Algorithm Lab">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#d9ff72"/>
+      <stop offset="1" stop-color="#9fda2f"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="124" fill="#121713"/>
+  <rect x="72" y="72" width="368" height="368" rx="88" fill="url(#bg)"/>
+  <path d="M157 382h210v38H145c-17 0-28-17-20-32l12-22h214l16 16H157zm8-37c2-39 12-71 31-98 14-20 32-37 53-51l-55-67 60 13 59-32 1 58c35 25 53 64 53 116 0 22-3 42-8 61H165zm82-133c-29 20-47 48-53 84h119c-2-43-20-72-54-88l-12 4zm46-63-33 18 33 12v-30z" fill="#17210f"/>
+  <circle cx="272" cy="169" r="9" fill="#d9ff72"/>
+  <path d="M105 112h31v31h-31zm271 256h31v31h-31z" fill="#f4bd4f"/>
+</svg>

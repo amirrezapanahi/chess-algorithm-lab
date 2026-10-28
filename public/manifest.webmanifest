@@ -1,0 +1,20 @@
+{
+  "name": "Chess Algorithm Lab",
+  "short_name": "Chess Lab",
+  "description": "Write, run, test, and visualize chessboard algorithms in your browser.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0d100e",
+  "theme_color": "#131612",
+  "categories": ["education", "developer", "productivity"],
+  "icons": [
+    {
+      "src": "app-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
