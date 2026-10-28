@@ -1,4 +1,5 @@
 import type { ExerciseDefinition } from '../types/lab'
+import firstOpening from './first-opening'
 import rookAttack from './rook-attack'
 import nRooks from './n-rooks'
 import nQueens from './n-queens'
@@ -23,7 +24,7 @@ class ExerciseRegistry {
 
 export const exerciseRegistry = new ExerciseRegistry()
 
-for (const exercise of [rookAttack, nRooks, nQueens, knightPath]) {
+for (const exercise of [firstOpening, rookAttack, nRooks, nQueens, knightPath]) {
   exerciseRegistry.register(exercise)
 }
 

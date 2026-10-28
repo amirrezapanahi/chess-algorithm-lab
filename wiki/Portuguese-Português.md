@@ -35,3 +35,24 @@ function* trace(input) {
 ```
 
 Consulte [[Code-Examples]] e [[Exercise-API]] para mais exemplos.
+
+## Começar do zero: a primeira abertura
+
+Selecione **01 · Começar**. O tabuleiro mostra logo as 32 peças: as pretas nas filas 8 e 7 e as brancas nas filas 1 e 2. As colunas vão de `a` a `h` e as filas de `1` a `8`.
+
+Quatro ideias bastam: `function solve()` define a função executada pelo laboratório; texto entre aspas é uma **string**; `[]` cria um **array ordenado**; `return` devolve a resposta.
+
+```js
+function solve() {
+  return [
+    "e2-e4",
+    "e7-e5",
+    "g1-f3",
+    "b8-c6",
+  ];
+}
+```
+
+As brancas e as pretas avançam o peão do rei e depois desenvolvem um cavalo. Prima **Executar**, abra **Tabuleiro** e use a linha temporal; depois prima **Testar**. O resultado esperado é `1/1` aprovado.
+
+Erros comuns: esquecer aspas ou vírgulas, trocar a ordem, usar outro tipo de traço ou escrever `E2-E4` em maiúsculas. Não é necessário usar `input` nem criar `trace()` neste exercício.

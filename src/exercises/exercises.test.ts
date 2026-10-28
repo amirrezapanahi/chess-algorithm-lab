@@ -4,12 +4,34 @@ import { solveNQueens } from './n-queens/reference'
 import { knownQueenCounts } from './n-queens'
 import { solveNRooks } from './n-rooks/reference'
 import { exerciseRegistry } from './registry'
+import { simpleOpeningMoves, startingPieces } from './first-opening'
+import { stateAtStep } from '../lib/trace'
 
 describe('exercise collection', () => {
   it('registers all exercise modules with unique IDs', () => {
     const exercises = exerciseRegistry.list()
-    expect(exercises).toHaveLength(4)
-    expect(new Set(exercises.map(({ id }) => id)).size).toBe(4)
+    expect(exercises).toHaveLength(5)
+    expect(new Set(exercises.map(({ id }) => id)).size).toBe(5)
+  })
+
+  it('starts beginners with a complete board and validates the opening sequence', () => {
+    const exercise = exerciseRegistry.get('first-opening')!
+    expect(startingPieces).toHaveLength(32)
+    expect(exercise.validate({}, [...simpleOpeningMoves]).valid).toBe(true)
+    expect(exercise.validate({}, ['e2-e4']).valid).toBe(false)
+
+    const initialEvents = exercise.initialEvents ?? []
+    const initialState = stateAtStep(initialEvents, initialEvents.length, exercise.piece)
+    expect(initialState.pieces).toHaveLength(32)
+    expect(initialState.pieces.filter(({ color }) => color === 'white')).toHaveLength(16)
+    expect(initialState.pieces.filter(({ color }) => color === 'black')).toHaveLength(16)
+
+    const events = exercise.resultToEvents({}, [...simpleOpeningMoves])
+    const finalState = stateAtStep(events, events.length, exercise.piece)
+    expect(finalState.pieces).toHaveLength(32)
+    expect(finalState.pieces).toContainEqual(expect.objectContaining({ row: 4, col: 4, piece: 'pawn', color: 'white' }))
+    expect(finalState.pieces).toContainEqual(expect.objectContaining({ row: 2, col: 2, piece: 'knight', color: 'black' }))
+    expect(finalState.completed).toBe(true)
   })
 
   it('verifies known N Queens counts', () => {

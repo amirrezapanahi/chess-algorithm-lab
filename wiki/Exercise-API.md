@@ -2,6 +2,17 @@
 
 All coordinates are zero-based `{ row, col }` objects.
 
+## Start Here: First Opening
+
+The board starts with all 32 standard pieces. No input is required.
+
+```ts
+input  = {}
+output = ["e2-e4", "e7-e5", "g1-f3", "b8-c6"]
+```
+
+This small exercise teaches strings, arrays, `return`, Run, Test, and trace playback before algorithms.
+
 ## Rook Attack Detection
 
 ```ts
@@ -39,7 +50,8 @@ The path includes start and target. Return an empty path only when the target is
 ## Core trace events
 
 ```ts
-{ type: "place", row, col, piece?, label? }
+{ type: "setup", pieces: Array<{ row, col, piece, color?, label? }> }
+{ type: "place", row, col, piece?, color?, label? }
 { type: "remove", row, col }
 { type: "visit", row, col }
 { type: "check", row, col }
@@ -50,3 +62,5 @@ The path includes start and target. Return an empty path only when the target is
 { type: "path", positions }
 { type: "complete", message? }
 ```
+
+`color` is `"white"` or `"black"`. A `setup` event replaces the entire position atomically and rejects duplicate or out-of-board squares.

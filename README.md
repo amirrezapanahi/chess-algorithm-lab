@@ -13,7 +13,8 @@ There is no backend, account system, database server, or paid service. The built
 - Cancellation by terminating and recreating the worker
 - An SVG chessboard for arbitrary boards from 1×1 to 20×20
 - Forward/backward trace playback, speed controls, and skip-to-end
-- Four complete exercises with mathematical validators:
+- Five complete exercises with validators, beginning with a guided 32-piece board:
+  - Start Here: Your First Opening
   - Rook Attack Detection
   - N Rooks
   - N Queens
@@ -50,12 +51,12 @@ npm run preview     # serve the production build locally
 
 ## Student workflow
 
-1. Fork this repository and clone your fork.
-2. Choose an exercise in the lab.
-3. Read the problem and reveal hints as needed.
-4. Implement `solve(input)` in the web editor.
-5. Optionally implement `trace(input)` as a generator for step-by-step visualization.
-6. Use **Test** for public correctness checks.
+1. Open **01 · Start Here** and read the **Problem** tab.
+2. Complete the four-move array while inspecting the full 32-piece board.
+3. Use **Run**, board playback, and **Test** once before moving to algorithm exercises.
+4. Fork this repository and clone your fork when you are ready to keep work in Git.
+5. Choose an exercise, implement `solve(input)`, and reveal hints as needed.
+6. Optionally implement `trace(input)` for custom step-by-step visualization.
 7. Export the solution and save it under `student-solutions/` in your fork.
 8. Run the repository checks, commit, push, and open a pull request or submit through GitHub Classroom.
 
@@ -83,7 +84,7 @@ function* trace(input) {
 }
 ```
 
-Supported core events include `place`, `remove`, `visit`, `check`, `conflict`, `backtrack`, `highlight`, `solution`, `path`, and `complete`. Events are schema-validated and bounded before reaching the board. A valid `solve()` never needs a `trace()`; when trace data is absent, an exercise may visualize only the final result.
+Supported core events include `setup`, `place`, `remove`, `visit`, `check`, `conflict`, `backtrack`, `highlight`, `solution`, `path`, and `complete`. `setup` can atomically render a mixed white/black position such as the standard 32-piece board. Events are schema-validated and bounded before reaching the board. A valid `solve()` never needs a `trace()`; when trace data is absent, an exercise may visualize only the final result.
 
 ## Architecture
 

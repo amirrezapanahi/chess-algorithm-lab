@@ -1,15 +1,11 @@
 import type { KeyboardEvent } from 'react'
-import type { Language, PieceKind, Position } from '../types/lab'
+import type { Language, PieceColor, PieceKind, Position } from '../types/lab'
 import type { VisualState } from '../lib/trace'
 import { translate } from '../i18n'
 
-const glyphs: Record<PieceKind, string> = {
-  rook: '♜',
-  queen: '♛',
-  bishop: '♝',
-  knight: '♞',
-  king: '♚',
-  pawn: '♟',
+const glyphs: Record<PieceColor, Record<PieceKind, string>> = {
+  white: { rook: '♖', queen: '♕', bishop: '♗', knight: '♘', king: '♔', pawn: '♙' },
+  black: { rook: '♜', queen: '♛', bishop: '♝', knight: '♞', king: '♚', pawn: '♟' },
 }
 
 const keyOf = ({ row, col }: Position): string => `${row}:${col}`
@@ -102,11 +98,11 @@ export function ChessBoard({ size, state, language, selected, onSelect }: ChessB
                   <text
                     x={(col + 0.5) * cell}
                     y={(row + 0.54) * cell}
-                    className="piece-glyph"
+                    className={`piece-glyph piece-${piece.color ?? 'black'}`}
                     style={{ fontSize: `${cell * 0.78}px` }}
                     filter="url(#piece-shadow)"
                   >
-                    {glyphs[piece.piece]}
+                    {glyphs[piece.color ?? 'black'][piece.piece]}
                   </text>
                   {piece.label && safeSize <= 10 && (
                     <text x={(col + 0.78) * cell} y={(row + 0.26) * cell} className="piece-label" style={{ fontSize: `${cell * 0.18}px` }}>

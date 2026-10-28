@@ -16,9 +16,17 @@ export interface Position {
 }
 
 export type PieceKind = 'rook' | 'queen' | 'bishop' | 'knight' | 'king' | 'pawn'
+export type PieceColor = 'white' | 'black'
+
+export interface BoardPiece extends Position {
+  piece: PieceKind
+  color?: PieceColor
+  label?: string
+}
 
 export type TraceEvent =
-  | { type: 'place'; row: number; col: number; piece?: PieceKind; label?: string }
+  | { type: 'setup'; pieces: BoardPiece[] }
+  | { type: 'place'; row: number; col: number; piece?: PieceKind; color?: PieceColor; label?: string }
   | { type: 'remove'; row: number; col: number }
   | { type: 'visit'; row: number; col: number }
   | { type: 'check'; row: number; col: number }
@@ -80,6 +88,7 @@ export interface ExerciseDefinition {
   inputFields: InputField[]
   tests: ExerciseTest[]
   piece: PieceKind
+  initialEvents?: TraceEvent[]
   getBoardSize: (input: Record<string, unknown>) => number
   validate: (input: Record<string, unknown>, output: unknown) => ValidationResult
   resultToEvents: (input: Record<string, unknown>, output: unknown) => TraceEvent[]

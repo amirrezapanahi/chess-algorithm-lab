@@ -73,4 +73,17 @@ describe('QuickJS sandbox program', () => {
     expect(finalState.highlighted).toHaveLength(6)
     expect(finalState.completed).toBe(true)
   })
+
+  it('executes the beginner opening and preserves the complete position', () => {
+    const exercise = exerciseRegistry.get('first-opening')!
+    const source = 'function solve() { return ["e2-e4", "e7-e5", "g1-f3", "b8-c6"]; }'
+    const output = evaluate(source, {})
+    expect(exercise.validate({}, output.result).valid).toBe(true)
+
+    const events = sanitizeTrace(exercise.resultToEvents({}, output.result), 8)
+    const finalState = stateAtStep(events, events.length, exercise.piece)
+    expect(finalState.pieces).toHaveLength(32)
+    expect(finalState.pieces).toContainEqual(expect.objectContaining({ row: 5, col: 5, piece: 'knight', color: 'white' }))
+    expect(finalState.completed).toBe(true)
+  })
 })

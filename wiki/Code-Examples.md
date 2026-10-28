@@ -2,6 +2,23 @@
 
 Student algorithms are currently standard synchronous JavaScript. TypeScript support may be added later.
 
+## First lesson: a four-move opening
+
+This is the complete answer for **01 · Start Here**:
+
+```js
+function solve() {
+  return [
+    "e2-e4",
+    "e7-e5",
+    "g1-f3",
+    "b8-c6",
+  ];
+}
+```
+
+The array preserves order. Each quoted item is a string containing a source square, a hyphen, and a destination square. The exercise supplies the full 32-piece visualization, so beginners do not need to write `trace()` yet.
+
 ## `solve(input)`
 
 `solve` is required and is the only function used for correctness tests.

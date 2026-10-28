@@ -1,4 +1,4 @@
-**Chess Algorithm Lab**
+**Start from zero · شروع از صفر**
 
 - [[Home]]
 - [[English]]
@@ -8,7 +8,7 @@
 - [[Russian-Русский|Русский]]
 - [[Arabic-العربية|العربية]]
 
-**Reference**
+**Code reference**
 
 - [[Code-Examples]]
 - [[Exercise-API]]

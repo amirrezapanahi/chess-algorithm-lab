@@ -45,3 +45,29 @@ See [[Code-Examples]] for complete API examples and [[Exercise-API]] for each in
 ## Interface languages
 
 Use the globe menu to switch between English, Persian, Portuguese, French, Russian, and Arabic. Persian and Arabic switch the interface to RTL while the editor and technical identifiers remain LTR.
+
+## Start from zero: your first opening
+
+Select **01 · Start Here**. The board already contains all 32 pieces: Black occupies ranks 8 and 7, White occupies ranks 1 and 2. Files run from `a` to `h`; ranks run from `1` to `8`.
+
+You only need four JavaScript ideas:
+
+- `function solve()` creates the function the lab will call.
+- Text inside quotes, such as `"e2-e4"`, is a **string**.
+- Square brackets create an ordered **array**.
+- `return` sends the answer back to the lab.
+
+```js
+function solve() {
+  return [
+    "e2-e4",
+    "e7-e5",
+    "g1-f3",
+    "b8-c6",
+  ];
+}
+```
+
+White moves the king pawn, Black replies symmetrically, then both sides develop a knight. Press **Run**, open **Board**, and use the timeline. Press **Test**; the expected result is `1/1` passed.
+
+Common mistakes are missing quotes or commas, using an en dash instead of `-`, changing the move order, or writing `E2-E4` with uppercase letters. This lesson needs no `input` and no custom `trace()`; the visualizer handles the board for you.

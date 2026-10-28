@@ -53,7 +53,7 @@ export default function App() {
   const [events, setEvents] = useState<TraceEvent[]>([])
   const [step, setStep] = useState(0)
   const [playing, setPlaying] = useState(false)
-  const [editorMode, setEditorMode] = useState<'code' | 'problem'>('code')
+  const [editorMode, setEditorMode] = useState<'code' | 'problem'>('problem')
   const [mobileTab, setMobileTab] = useState<MobileTab>('code')
   const [consoleView, setConsoleView] = useState<ConsoleView>('output')
   const [selectingKey, setSelectingKey] = useState<string>()
@@ -67,7 +67,11 @@ export default function App() {
   const code = codes[exercise.id] ?? exercise.starterCode
   const input = inputs[exercise.id] ?? exercise.defaultInput
   const boardSize = Math.max(1, Math.min(20, Math.floor(exercise.getBoardSize(input))))
-  const visualState = useMemo(() => events.length ? stateAtStep(events, step, exercise.piece) : emptyVisualState(), [events, step, exercise.piece])
+  const visualState = useMemo(() => {
+    if (events.length) return stateAtStep(events, step, exercise.piece)
+    const initialEvents = exercise.initialEvents ?? []
+    return initialEvents.length ? stateAtStep(initialEvents, initialEvents.length, exercise.piece) : emptyVisualState()
+  }, [events, step, exercise])
   const selectedPosition = selectingKey ? input[selectingKey] as Position | undefined : undefined
   const repositoryUrl = import.meta.env.VITE_REPOSITORY_URL ?? 'https://github.com/amirrezapanahi/chess-algorithm-lab'
   const wikiUrl = `${repositoryUrl.replace(/\/$/, '')}/wiki`
@@ -79,7 +83,10 @@ export default function App() {
       .then((stored) => {
         if (!live) return
         if (stored.settings) {
-          if (exerciseRegistry.get(stored.settings.selectedExercise)) setSelectedId(stored.settings.selectedExercise)
+          if (exerciseRegistry.get(stored.settings.selectedExercise)) {
+            setSelectedId(stored.settings.selectedExercise)
+            setEditorMode(stored.settings.selectedExercise === 'first-opening' ? 'problem' : 'code')
+          }
           setLanguage(stored.settings.language)
           setTheme(stored.settings.theme)
           setSpeed(stored.settings.speed)
@@ -141,7 +148,7 @@ export default function App() {
     setConsoleData(emptyConsoleData())
     setTestResults([])
     setConsoleView('output')
-    setEditorMode('code')
+    setEditorMode(id === 'first-opening' ? 'problem' : 'code')
   }
 
   const runCode = useCallback(async () => {
@@ -358,7 +365,7 @@ export default function App() {
               <span className="board-size-badge">{boardSize} × {boardSize}</span>
             </div>
             <div className="visualizer-body">
-              <InputControls exercise={exercise} input={input} language={language} selectingKey={selectingKey} onSelectingKey={setSelectingKey} onChange={changeInput} />
+              {exercise.inputFields.length > 0 && <InputControls exercise={exercise} input={input} language={language} selectingKey={selectingKey} onSelectingKey={setSelectingKey} onChange={changeInput} />}
               <div className="board-stage">
                 <ChessBoard size={boardSize} state={visualState} language={language} selected={selectedPosition} onSelect={selectSquare} />
                 {visualState.message && <div className="board-message">{visualState.message}</div>}

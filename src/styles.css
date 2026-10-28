@@ -339,6 +339,8 @@ button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible
 .square-conflict { fill: rgba(235, 79, 64, .72); stroke: #a5261b; stroke-width: .55; }
 .square-selected { fill: rgba(196, 245, 87, .78); stroke: #3e6410; stroke-width: .8; stroke-dasharray: 1.4 1; }
 .piece-glyph { fill: #151a16; stroke: rgba(255, 255, 255, .25); stroke-width: .12; text-anchor: middle; dominant-baseline: middle; font-family: 'Arial Unicode MS', 'DejaVu Sans', serif; pointer-events: none; }
+.piece-white { fill: #f7f5e9; stroke: #151a16; stroke-width: .22; paint-order: stroke; }
+.piece-black { fill: #111512; stroke: rgba(255, 255, 255, .24); stroke-width: .07; }
 .piece-label { fill: var(--accent); stroke: #202520; stroke-width: .2; paint-order: stroke; text-anchor: middle; font-family: Inter, sans-serif; font-weight: 900; pointer-events: none; }
 .board-coordinate { fill: var(--muted); font: 500 2.3px 'JetBrains Mono', monospace; }
 .path-line { fill: none; stroke: #f6f8ed; stroke-width: .7; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1.2 1.4; filter: drop-shadow(0 0 .5px rgba(0, 0, 0, .65)); pointer-events: none; }

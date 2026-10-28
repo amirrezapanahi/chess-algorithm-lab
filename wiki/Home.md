@@ -1,6 +1,6 @@
 # Chess Algorithm Lab Wiki
 
-Welcome to the multilingual documentation for Chess Algorithm Lab. Choose your language:
+Welcome to the multilingual documentation for Chess Algorithm Lab. Each language guide now starts from zero and includes a complete first-opening lesson. Choose your language:
 
 | Language | Guide |
 |---|---|
@@ -13,6 +13,7 @@ Welcome to the multilingual documentation for Chess Algorithm Lab. Choose your l
 
 ## Shared references
 
+- Start in the application with **01 · Start Here** to see a complete 32-piece board.
 - [[Code-Examples]] — `solve(input)`, `trace(input)`, events, and exercise examples
 - [[Exercise-API]] — input and output contracts for every exercise
 - [[Security-and-Limits]] — QuickJS sandbox guarantees and limitations

@@ -27,6 +27,7 @@ const exercise: ExerciseDefinition = {
   inputFields: [],
   tests: [],
   piece: 'rook',
+  initialEvents: [], // Optional: render a position before the first run.
   getBoardSize: (input) => Number(input.size),
   validate: (input, output) => ({ valid: true, message: '…' }),
   resultToEvents: (input, output) => [],
@@ -56,3 +57,17 @@ Keep reference implementations out of `starterCode`. Starters should teach the d
 ## 4. Localize and verify
 
 Every visible metadata string needs English and Persian text. Add Portuguese, French, Russian, and Arabic directly on `LocalizedText` or to `src/exercises/textTranslations.ts`; untranslated exercise text deliberately falls back to English. Code and identifiers stay LTR in every locale. Finish with `npm run lint`, `npm run typecheck`, `npm test`, and `npm run build`.
+
+For mixed-piece positions, use one validated `setup` event instead of dozens of `place` events:
+
+```ts
+{
+  type: 'setup',
+  pieces: [
+    { row: 0, col: 4, piece: 'king', color: 'black' },
+    { row: 7, col: 4, piece: 'king', color: 'white' },
+  ],
+}
+```
+
+Squares must be unique and inside the current board. Colors are optional and limited to `white` and `black`.

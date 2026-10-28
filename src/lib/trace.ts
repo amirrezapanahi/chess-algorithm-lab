@@ -1,7 +1,7 @@
-import type { PieceKind, Position, TraceEvent } from '../types/lab'
+import type { BoardPiece, PieceColor, PieceKind, Position, TraceEvent } from '../types/lab'
 
 const eventTypes = new Set([
-  'place', 'remove', 'visit', 'check', 'conflict', 'backtrack',
+  'setup', 'place', 'remove', 'visit', 'check', 'conflict', 'backtrack',
   'highlight', 'solution', 'path', 'complete',
 ])
 
@@ -29,13 +29,30 @@ function hasPositions(value: Record<string, unknown>, boardSize: number): boolea
     && value.positions.every((position) => isPosition(position, boardSize))
 }
 
+const pieceKinds: PieceKind[] = ['rook', 'queen', 'bishop', 'knight', 'king', 'pawn']
+const pieceColors: PieceColor[] = ['white', 'black']
+
+function isBoardPiece(value: unknown, boardSize: number): value is BoardPiece {
+  return isRecord(value)
+    && hasPosition(value, boardSize)
+    && pieceKinds.includes(value.piece as PieceKind)
+    && (value.color === undefined || pieceColors.includes(value.color as PieceColor))
+    && (value.label === undefined || typeof value.label === 'string')
+}
+
 export function validateTraceEvent(value: unknown, boardSize: number): value is TraceEvent {
   if (!isRecord(value) || typeof value.type !== 'string' || !eventTypes.has(value.type)) return false
 
   switch (value.type) {
+    case 'setup':
+      return Array.isArray(value.pieces)
+        && value.pieces.length <= boardSize * boardSize
+        && value.pieces.every((piece) => isBoardPiece(piece, boardSize))
+        && new Set(value.pieces.map((piece) => `${(piece as BoardPiece).row}:${(piece as BoardPiece).col}`)).size === value.pieces.length
     case 'place':
       return hasPosition(value, boardSize)
-        && (value.piece === undefined || ['rook', 'queen', 'bishop', 'knight', 'king', 'pawn'].includes(value.piece as PieceKind))
+        && (value.piece === undefined || pieceKinds.includes(value.piece as PieceKind))
+        && (value.color === undefined || pieceColors.includes(value.color as PieceColor))
         && (value.label === undefined || typeof value.label === 'string')
     case 'remove':
     case 'visit':
@@ -65,6 +82,7 @@ export function sanitizeTrace(events: unknown, boardSize: number, limit = 5_000)
 
 export interface VisualPiece extends Position {
   piece: PieceKind
+  color?: PieceColor
   label?: string
 }
 
@@ -95,12 +113,14 @@ const sameSquare = (a: Position, b: Position) => a.row === b.row && a.col === b.
 
 export function applyTraceEvent(state: VisualState, event: TraceEvent, defaultPiece: PieceKind): VisualState {
   switch (event.type) {
+    case 'setup':
+      return { ...emptyVisualState(), pieces: event.pieces.map((piece) => ({ ...piece })) }
     case 'place':
       return {
         ...state,
         pieces: [
           ...state.pieces.filter((piece) => !sameSquare(piece, event)),
-          { row: event.row, col: event.col, piece: event.piece ?? defaultPiece, label: event.label },
+          { row: event.row, col: event.col, piece: event.piece ?? defaultPiece, color: event.color, label: event.label },
         ],
         checked: [],
         conflicts: [],
