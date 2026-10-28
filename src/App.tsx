@@ -35,6 +35,7 @@ const validationForLanguage = (result: ValidationResult, language: Language): Va
 
 type BusyMode = 'run' | 'test' | null
 type MobileTab = 'code' | 'board' | 'console'
+type ConsoleView = 'output' | 'tests'
 
 export default function App() {
   const [selectedId, setSelectedId] = useState(defaultExercise.id)
@@ -54,6 +55,7 @@ export default function App() {
   const [playing, setPlaying] = useState(false)
   const [editorMode, setEditorMode] = useState<'code' | 'problem'>('code')
   const [mobileTab, setMobileTab] = useState<MobileTab>('code')
+  const [consoleView, setConsoleView] = useState<ConsoleView>('output')
   const [selectingKey, setSelectingKey] = useState<string>()
   const [leftPercent, setLeftPercent] = useState(49)
   const [consoleHeight, setConsoleHeight] = useState(232)
@@ -138,6 +140,7 @@ export default function App() {
     setSelectedId(id)
     setConsoleData(emptyConsoleData())
     setTestResults([])
+    setConsoleView('output')
     setEditorMode('code')
   }
 
@@ -148,6 +151,7 @@ export default function App() {
     setBusy('run')
     setConsoleData(emptyConsoleData())
     setTestResults([])
+    setConsoleView('output')
     resetPlayback()
     const execution = executeStudentCode({ code, input, mode: 'run', timeoutMs: 2_000, maxEvents: 5_000 })
     activeExecution.current = execution
@@ -178,7 +182,7 @@ export default function App() {
         stats: { durationMs: payload.durationMs, steps: nextEvents.length, backtracks },
       })
       if (rawValidation.valid) setCompletedExercises((current) => current.includes(exercise.id) ? current : [...current, exercise.id])
-      setMobileTab('board')
+      setMobileTab(nextEvents.length > 0 ? 'board' : 'console')
     } catch (error) {
       if (operationId.current !== currentOperation) return
       const message = error instanceof Error ? error.message : String(error)
@@ -199,6 +203,8 @@ export default function App() {
     setBusy('test')
     setTestResults([])
     setConsoleData(emptyConsoleData())
+    setConsoleView('tests')
+    resetPlayback()
     const results: TestResult[] = []
     for (const test of exercise.tests) {
       if (operationId.current !== currentOperation) break
@@ -221,11 +227,14 @@ export default function App() {
       setTestResults([...results])
     }
     if (operationId.current === currentOperation) {
+      if (results.length === exercise.tests.length && results.every((result) => result.passed)) {
+        setCompletedExercises((current) => current.includes(exercise.id) ? current : [...current, exercise.id])
+      }
       setBusy(null)
       activeExecution.current = undefined
       setMobileTab('console')
     }
-  }, [busy, code, exercise, language, stopActive, supportsRuntime])
+  }, [busy, code, exercise, language, resetPlayback, stopActive, supportsRuntime])
 
   const changeInput = (nextInput: Record<string, unknown>): void => {
     setInputs((current) => ({ ...current, [exercise.id]: nextInput }))
@@ -251,8 +260,10 @@ export default function App() {
     const anchor = document.createElement('a')
     anchor.href = url
     anchor.download = `${exercise.slug}-solution.js`
+    document.body.appendChild(anchor)
     anchor.click()
-    URL.revokeObjectURL(url)
+    anchor.remove()
+    window.setTimeout(() => URL.revokeObjectURL(url), 0)
   }
 
   const resetWorkspace = async (): Promise<void> => {
@@ -268,6 +279,7 @@ export default function App() {
     setCompletedExercises([])
     setConsoleData(emptyConsoleData())
     setTestResults([])
+    setConsoleView('output')
     resetPlayback()
   }
 
@@ -327,7 +339,7 @@ export default function App() {
             code={code}
             language={language}
             theme={theme}
-            busy={busy !== null}
+            busy={busy}
             mode={editorMode}
             onModeChange={setEditorMode}
             onChange={(source) => setCodes((current) => ({ ...current, [exercise.id]: source }))}
@@ -367,7 +379,15 @@ export default function App() {
         </div>
         <div className="resize-handle horizontal" onPointerDown={resizeConsole} role="separator" aria-orientation="horizontal" />
         <div className={`console-slot mobile-${mobileTab}`}>
-          <ConsolePanel language={language} data={consoleData} testResults={testResults} onClear={() => { setConsoleData(emptyConsoleData()); setTestResults([]) }} />
+          <ConsolePanel
+            language={language}
+            data={consoleData}
+            testResults={testResults}
+            busy={busy}
+            tab={consoleView}
+            onTabChange={setConsoleView}
+            onClear={() => { setConsoleData(emptyConsoleData()); setTestResults([]) }}
+          />
         </div>
       </main>
     </div>

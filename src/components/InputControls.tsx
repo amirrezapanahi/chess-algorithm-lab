@@ -13,6 +13,11 @@ interface InputControlsProps {
 
 export function InputControls({ exercise, input, language, selectingKey, onSelectingKey, onChange }: InputControlsProps) {
   const set = (key: string, value: unknown) => onChange({ ...input, [key]: value })
+  const boardMax = Math.max(0, Math.floor(exercise.getBoardSize(input)) - 1)
+  const clamp = (value: string, min: number, max: number): number => {
+    const parsed = Number(value)
+    return Math.max(min, Math.min(max, Number.isFinite(parsed) ? Math.round(parsed) : min))
+  }
   return (
     <div className="input-controls">
       {exercise.inputFields.map((field) => {
@@ -28,7 +33,7 @@ export function InputControls({ exercise, input, language, selectingKey, onSelec
                 max={field.max}
                 step={field.step ?? 1}
                 value={value}
-                onChange={(event) => set(field.key, Math.max(field.min, Math.min(field.max, Math.round(Number(event.target.value)))))}
+                onChange={(event) => set(field.key, clamp(event.target.value, field.min, field.max))}
               />
             </label>
           )
@@ -47,11 +52,11 @@ export function InputControls({ exercise, input, language, selectingKey, onSelec
             <span className="position-label">{localized(language, field.label)}</span>
             <label>
               <span>{translate(language, 'row')}</span>
-              <input type="number" min="0" value={position?.row ?? 0} onChange={(event) => set(field.key, { row: Number(event.target.value), col: position?.col ?? 0 })} />
+              <input type="number" min="0" max={boardMax} value={position?.row ?? 0} onChange={(event) => set(field.key, { row: clamp(event.target.value, 0, boardMax), col: position?.col ?? 0 })} />
             </label>
             <label>
               <span>{translate(language, 'column')}</span>
-              <input type="number" min="0" value={position?.col ?? 0} onChange={(event) => set(field.key, { row: position?.row ?? 0, col: Number(event.target.value) })} />
+              <input type="number" min="0" max={boardMax} value={position?.col ?? 0} onChange={(event) => set(field.key, { row: position?.row ?? 0, col: clamp(event.target.value, 0, boardMax) })} />
             </label>
             <button
               className="icon-button subtle"
